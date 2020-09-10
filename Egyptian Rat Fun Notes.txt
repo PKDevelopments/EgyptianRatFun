@@ -22,5 +22,4 @@ DEV NOTES FOR EGYPTIAN RAT FUN
 **Maybe make animations?
 
 Bug Log:
--Need to shuffle player deck after getting a new stack; found an infinite loop that is possible
--P2 will only take the stack when P1 pushes playButton. This is intentional but needs to be coded out at some point	
+-P2 will only take the stack when P1 pushes playButton. This is intentional.
