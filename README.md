@@ -1,6 +1,6 @@
 # EgyptianRatFun
 
-Summary: Despite the name, this project is intended to be a basic 2 player rendition of Egyptian Rat Screw. Pressing the button will cause Player 1 (you) to play the first card. The AI will play a card approximately 2 seconds after that. If conditions for a slap are met (straight, flush, sandwich, pair), after approximately 1 second the AI will "slap" the pile. The player may "slap" by tapping anywhere on the screen except the button. If the player slaps incorrectly, the top card of his deck will be "burned" to the bottom of the pile. Note that the AI will never slap incorrectly.  
+Summary: Despite the name, this project is intended to be a basic 2 player rendition of Egyptian Rat Screw. Pressing the button will cause Player 1 (you) to play the first card. The AI will play a card approximately 2 seconds after that. If conditions for a slap are met (straight, flush, sandwich, pair), after approximately 1 second the AI will "slap" the pile. The player may "slap" by tapping anywhere on the screen except the button. If the player slaps incorrectly, the top card of his deck will be "burned" to the bottom of the pile. When playing royal cards, the TextView at the top of the screen will inform the player when the pile may be taken or is being taken. The button must be pushed in order to complete this process. This allows for the player to control the pace of when the pile gets taken. It will not prevent the AI from slapping the pile. Note that the AI will never slap incorrectly.  
 
 Credits:
 Card Deck sprite: Dan Waters
