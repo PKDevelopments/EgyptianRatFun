@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         updateStack();
     }
 
-    private void burnCard(){ //This function applies only if Player 1 (you) was wrong
+    private void burnCard(){ //This function applies only if Player 1 (you) slapped incorrectly
         if(!game_over){
             PlayCard(0);
             MoveTopCardtoBottom();
