@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView stackView;
     //Reference vars
     //Game vars
-    boolean testing = true;
+    boolean testing = false;
     boolean game_started = false;
     boolean game_over = false;
     int players = 2;
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 p2score.setText("P2 Cards Remaining: "+deck2size);
                 break;
         }
+        checkDecksforDuplicates();
         if(player == 0){
             for(int i = 0; i < deck1size; i++){
                 }
@@ -109,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
             PlayCard(0);
             MoveTopCardtoBottom();
         }
+    }
+    //This is only intended for troubleshooting use, return a log whether there are duplicates in a deck or not
+    private boolean checkDecksforDuplicates(){
+        for(int i = 0; i < deck1size; i++){
+            for(int j = 0; j < deck2size; j++){
+                if(deck1[i] == deck2[j]){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //This is just for the base deck
@@ -127,10 +139,9 @@ public class MainActivity extends AppCompatActivity {
     //new card = input[index]
     private boolean checkForDuplicates(int[] input, int index){
         int matchcount = 0;
-                for(int i = 0; i < index; i++) {
+                for(int i = 0; i <= index; i++) {
                     if (input[index] == input[i]){
                         matchcount++;
-                    //    Log.d("HELPME match", ""+input[index]+" "+matchcount);
                         if(matchcount > 1){return true;}
                     }
                 }
@@ -160,10 +171,13 @@ public class MainActivity extends AppCompatActivity {
                 if(slapwait_count >= slapwait_limit){
                     judgeView.setText(result);
                     addCards(1);
+                    slapwait_count = 0; royal_active = false; royal_countdown = 0; royal_limit = 0;
+                    //Note: This code ONLY works because it is TWO PLAYER!!!
+                    if(player_turn != 1){updateTurn(1);}
                 }
             }
         }
-        else{waiting = false; slapwait_count = 0;
+        else{waiting = false;
         }
     }
 
@@ -176,14 +190,11 @@ public class MainActivity extends AppCompatActivity {
             case 2: //2 Players
                 for(int i = 0; i < deck1size; i++){
                     deck1[i] = shuffledDeck[i];
-                  //  Log.d("HELPME DEALED 1", ""+deck1[i]);
-                      Log.d("HELPME DEALED 1", ""+deck1[i]);
             }
                for(int i = 0; i < deck2size; i++){
                    deck2[i] = shuffledDeck[i+decksizes];
-                  // Log.d("HELPME DEALED 2", ""+deck2[i]);
-                    Log.d("HELPME DEALED 2", ""+deck2[i]);
             }
+            checkDecksforDuplicates();
             break;
         }
     }
@@ -266,8 +277,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkforLoss() {
-        if(deck1size == 0){judgeView.setText("P1 LOSES"); game_over = true;}
-        if(deck2size == 0){judgeView.setText("P2 LOSES"); game_over = true;}
+        if(deck1size == 0){judgeView.setText("P2 WINS"); game_over = true; pile_open = false; resetGame();}
+        if(deck2size == 0){judgeView.setText("P1 WINS"); game_over = true; pile_open = false; resetGame();}
+    }
+
+    private void resetGame(){
+
     }
 
     private void checkforRoyals(){ //Returns true if there is currently a royal at the top of the stack
@@ -277,22 +292,18 @@ public class MainActivity extends AppCompatActivity {
                case 1: //Ace
                    royal_limit = 4; royal_countdown = 0;
                    royal_active = true;
-                   Log.d("HELPME", "AN ACE HAS APPEARED");
                    break;
                case 11: //Jack
                    royal_limit = 1; royal_countdown = 0;
                    royal_active = true;
-                   Log.d("HELPME", "A JACK HAS APPEARED");
                    break;
                case 12: //Queen
                    royal_limit = 2; royal_countdown = 0;
                    royal_active = true;
-                   Log.d("HELPME", "A QUEEN HAS APPEARED");
                    break;
                case 13: //King
                    royal_limit = 3; royal_countdown = 0;
                    royal_active = true;
-                   Log.d("HELPME", "A KING HAS APPEARED");
                    break;
            }
         }
@@ -346,43 +357,37 @@ public class MainActivity extends AppCompatActivity {
         int[] shuffled = new int[52];
         switch(player){
             case 0:
-                //Log.d("HELPME", ""+deck1size);
                 for(int i = 0; i < deck1size; i++){
                     shuffled[i] = deck1[shuffler.nextInt(deck1size)];
                     while(checkForDuplicates(shuffled, i)) {
-                      //  Log.d("HELPME", "THIS CARD IS A DUPLICATE "+shuffled[i]+" "+i);
                         shuffled[i] = deck1[shuffler.nextInt(deck1size)];
-                      //  Log.d("HELPME", "Replaced by "+shuffled[i]+" ");
                     }
-                 //   Log.d("HELPMEP1DECK", ""+shuffled[i]);
                 }
                 break;
             case 1:
-              //  Log.d("HELPME", ""+deck2size);
                 for(int i = 0; i < deck2size; i++){
                     shuffled[i] = deck2[shuffler.nextInt(deck2size)];
                     while(checkForDuplicates(shuffled, i)) {
-                 //       Log.d("HELPME", "THIS CARD IS A DUPLICATE "+shuffled[i]+" "+i);
                         shuffled[i] = deck2[shuffler.nextInt(deck2size)];
-                 //       Log.d("HELPME", "Replaced by "+shuffled[i]+" ");
                     }
-                 //   Log.d("HELPMEP2DECK", ""+shuffled[i]);
                 }
                 break;
         }
         return shuffled;
     }
 
-    private void SlapLogic(){
+    private void SlapLogic(){ //This is Player 1's slap logic
         String result = tableView.slapLogic();
         String message = "";
         switch(result){
             case "WRONG": message = "LOL YOU\'RE WRONG";
                 burnCard(); //Assumes player screwed this up
             break;
-            default:
+            default: //This means that Player 1 slapped correctly
                 message = result;
                 addCards(0);
+                slapwait_count = 0; royal_active = false; royal_countdown = 0; royal_limit = 0;
+                if(player_turn != 0){updateTurn(0);}
             break;
         }
         judgeView.setText(message);
@@ -399,7 +404,12 @@ public class MainActivity extends AppCompatActivity {
         if(player_turn == 0){playButton.setText("It is your turn.");}
         else{playButton.setText("It is Player "+(player_turn+1)+"\'s turn.");}}
 
+    private void updateTurn(int player){
+        player_turn = player;
+        if(player_turn == 0){playButton.setText("It is your turn.");}
+        else{playButton.setText("It is Player "+(player_turn+1)+"\'s turn.");}
 
+    }
 
     @Override
         public boolean onTouchEvent(MotionEvent event) {
