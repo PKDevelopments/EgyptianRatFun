@@ -57,7 +57,7 @@ public class CardTable extends View {
     }}
 
     public void setText(int input){
-        Log.d("HELPME", ""+input+" "+pile_cards[pile_size]);
+        Log.d("HELPME Card Played", ""+input+" "+pile_cards[pile_size]);
         pile_cards[pile_size] = card.getName(input-1);
         pile_ids[pile_size] = input;
         pile_size++;
@@ -74,7 +74,7 @@ public class CardTable extends View {
         if(pile_size == 2){last_three[1] = pile_ids[pile_size-2];
             for(int i = 0; i < 2; i++){
                 last_three_values[i] =
-                        card.getValue(last_three[i]);
+                        card.getValue(last_three[i]-1);
             }
         }
         if(pile_size > 2){last_three[2] = pile_ids[pile_size-3];
@@ -122,8 +122,6 @@ public class CardTable extends View {
     public int checkforRoyals(){
         if(card.getValue(pile_ids[pile_size-1]-1) == 1 ||card.getValue(pile_ids[pile_size-1]-1) == 11 ||
                 card.getValue(pile_ids[pile_size-1]-1) == 12 || card.getValue(pile_ids[pile_size-1]-1) == 13){
-                //Log.d("HELPME", "A "+ card.getName(pile_ids[pile_size-1]-1) +" HAS APPEARED");
-
                 return  card.getValue(pile_ids[pile_size-1]-1);
         }
         return 0;

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView stackView;
     //Reference vars
     //Game vars
-    boolean testing = false;
+    boolean testing = true;
     boolean game_started = false;
     boolean game_over = false;
     int players = 2;
@@ -93,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
                 p2score.setText("P2 Cards Remaining: "+deck2size);
                 break;
         }
+        if(player == 0){
+            for(int i = 0; i < deck1size; i++){
+                }
+            }
+        if(player == 1){
+            for(int i = 0; i < deck2size; i++){
+            }
+        }
         updateStack();
     }
 
@@ -115,27 +123,17 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    //This is for player decks
-    private boolean checkForDuplicates(int input, int player){
+    //This is for player decks, inputs are the new deck and its index number
+    //new card = input[index]
+    private boolean checkForDuplicates(int[] input, int index){
         int matchcount = 0;
-        switch(player){
-            case 0:
-                for(int i = 0; i < deck1size; i++) {
-                    if (input == deck1[i]){
+                for(int i = 0; i < index; i++) {
+                    if (input[index] == input[i]){
                         matchcount++;
+                    //    Log.d("HELPME match", ""+input[index]+" "+matchcount);
+                        if(matchcount > 1){return true;}
                     }
                 }
-                break;
-            case 1:
-                for(int i = 0; i < deck2size; i++) {
-                    if (input == deck2[i]){
-                        matchcount++;
-                    }
-                }
-                break;
-        }
-
-        if(matchcount > 1){return true;}
         return false;
     }
 
@@ -160,14 +158,12 @@ public class MainActivity extends AppCompatActivity {
             if(waiting){
                 slapwait_count++;
                 if(slapwait_count >= slapwait_limit){
-                    //Log.d("HELPME", "SLAP SLAP SLAP");
                     judgeView.setText(result);
                     addCards(1);
                 }
             }
         }
         else{waiting = false; slapwait_count = 0;
-        //    Log.d("HELPME", "No SLAP");
         }
     }
 
@@ -177,12 +173,16 @@ public class MainActivity extends AppCompatActivity {
         deck1size = deck2size = decksizes;
 
         switch(players){
-            case 2:
+            case 2: //2 Players
                 for(int i = 0; i < deck1size; i++){
                     deck1[i] = shuffledDeck[i];
+                  //  Log.d("HELPME DEALED 1", ""+deck1[i]);
+                      Log.d("HELPME DEALED 1", ""+deck1[i]);
             }
                for(int i = 0; i < deck2size; i++){
-                   deck2[i] = shuffledDeck[i+decksizes-1];
+                   deck2[i] = shuffledDeck[i+decksizes];
+                  // Log.d("HELPME DEALED 2", ""+deck2[i]);
+                    Log.d("HELPME DEALED 2", ""+deck2[i]);
             }
             break;
         }
@@ -312,7 +312,6 @@ public class MainActivity extends AppCompatActivity {
                     if(player_turn == 1){judgeView.setText("P2 can take the Stack.");}
                     }
             }
-            //Log.d("HELPME", "Royal count is active: "+royal_countdown);
         }
     }
 
@@ -347,20 +346,27 @@ public class MainActivity extends AppCompatActivity {
         int[] shuffled = new int[52];
         switch(player){
             case 0:
+                //Log.d("HELPME", ""+deck1size);
                 for(int i = 0; i < deck1size; i++){
                     shuffled[i] = deck1[shuffler.nextInt(deck1size)];
-                    while(checkForDuplicates(shuffled[i], 0)) {
+                    while(checkForDuplicates(shuffled, i)) {
+                      //  Log.d("HELPME", "THIS CARD IS A DUPLICATE "+shuffled[i]+" "+i);
                         shuffled[i] = deck1[shuffler.nextInt(deck1size)];
-                        Log.d("HELPME", "THIS CARD IS A DUPLICATE "+shuffled[i]);
+                      //  Log.d("HELPME", "Replaced by "+shuffled[i]+" ");
                     }
+                 //   Log.d("HELPMEP1DECK", ""+shuffled[i]);
                 }
                 break;
             case 1:
+              //  Log.d("HELPME", ""+deck2size);
                 for(int i = 0; i < deck2size; i++){
                     shuffled[i] = deck2[shuffler.nextInt(deck2size)];
-                    while(checkForDuplicates(shuffled[i], 1)) {
+                    while(checkForDuplicates(shuffled, i)) {
+                 //       Log.d("HELPME", "THIS CARD IS A DUPLICATE "+shuffled[i]+" "+i);
                         shuffled[i] = deck2[shuffler.nextInt(deck2size)];
+                 //       Log.d("HELPME", "Replaced by "+shuffled[i]+" ");
                     }
+                 //   Log.d("HELPMEP2DECK", ""+shuffled[i]);
                 }
                 break;
         }
@@ -390,7 +396,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateTurn(){
         player_turn++;
         if(player_turn >= players){player_turn = 0;}
-        playButton.setText("It is Player "+(player_turn+1)+"\'s turn.");}
+        if(player_turn == 0){playButton.setText("It is your turn.");}
+        else{playButton.setText("It is Player "+(player_turn+1)+"\'s turn.");}}
+
 
 
     @Override
