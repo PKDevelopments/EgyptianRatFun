@@ -10,3 +10,4 @@ https://channel9.msdn.com/coding4fun/articles/Building-Multiplayer-Texas-Holdem-
 
 Official Rules:
 https://bicyclecards.com/how-to-play/egyptian-rat-screw/
+![Slap](https://user-images.githubusercontent.com/9030473/233276111-1e4fd376-dc8c-49cf-b8e7-d9b6249b80ec.jpg)
